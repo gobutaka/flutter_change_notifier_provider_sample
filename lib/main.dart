@@ -20,14 +20,17 @@ class MyApp extends StatelessWidget {
 }
 
 class Counter with ChangeNotifier {
-  int _value;
-
   Counter(this._value);
-
+  int _value;
   int get value => this._value;
 
   void increment() {
     _value++;
+    notifyListeners();
+  }
+
+  void decrement() {
+    _value--;
     notifyListeners();
   }
 }
@@ -47,28 +50,36 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            WidgetCenterText(),
-            WidgetNumText(),
+            CenterTextWidget(),
+            CounterNumberWidget(),
           ],
         ),
       ),
-      floatingActionButton: WidgetIncrementBtn(),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          IncrementButtonWidget(),
+          const SizedBox(height: 8),
+          DecrementButtonWidget(),
+        ]
+      ),
     );
   }
 }
 
-class WidgetCenterText extends StatelessWidget {
-  const WidgetCenterText({Key key}) : super(key: key);
+class CenterTextWidget extends StatelessWidget {
+  const CenterTextWidget({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Text('You have pushed the button this many times:');
   }
 }
 
-class WidgetNumText extends StatelessWidget {
-  const WidgetNumText({Key key}) : super(key: key);
+class CounterNumberWidget extends StatelessWidget {
+  const CounterNumberWidget({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    // 値を受け取る
     final counter = Provider.of<Counter>(context);
     return Text(
       '${counter.value}',
@@ -77,15 +88,36 @@ class WidgetNumText extends StatelessWidget {
   }
 }
 
-class WidgetIncrementBtn extends StatelessWidget {
-  const WidgetIncrementBtn({Key key}) : super(key: key);
+class IncrementButtonWidget extends StatelessWidget {
+  const IncrementButtonWidget({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    /*
+      値を受け取る
+      値の変化に応じて表示更新などの処理をする必要がないので、「listen: false」でnotifyListeners()によるリビルドを回避
+    */
     final counter = Provider.of<Counter>(context, listen: false);
     return FloatingActionButton(
       onPressed: () => counter.increment(),
       tooltip: 'Increment',
       child: Icon(Icons.add),
+    );
+  }
+}
+
+class DecrementButtonWidget extends StatelessWidget {
+  const DecrementButtonWidget({Key key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    /*
+      値を受け取る
+      値の変化に応じて表示更新などの処理をする必要がないので、「listen: false」でnotifyListeners()によるリビルドを回避
+    */
+    final counter = Provider.of<Counter>(context, listen: false);
+    return FloatingActionButton(
+      onPressed: () => counter.decrement(),
+      tooltip: 'Decrement',
+      child: Icon(Icons.remove),
     );
   }
 }

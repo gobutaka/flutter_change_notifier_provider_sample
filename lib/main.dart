@@ -1,3 +1,4 @@
+import 'package:flutter_change_notifier_provider_sample/models/counter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,22 +17,6 @@ class MyApp extends StatelessWidget {
         child: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
     );
-  }
-}
-
-class Counter with ChangeNotifier {
-  Counter(this._value);
-  int _value;
-  int get value => this._value;
-
-  void increment() {
-    _value++;
-    notifyListeners();
-  }
-
-  void decrement() {
-    _value--;
-    notifyListeners();
   }
 }
 
